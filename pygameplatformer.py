@@ -52,6 +52,9 @@ def detect_collision(rect,pos):
 
 for i in range(100):
     add_block()
+
+font = pygame.font.SysFont("Arial",40)
+last_floor_touched = -1
 while running:
     dt = clock.tick(60)/1000
     for event in pygame.event.get():
@@ -72,7 +75,8 @@ while running:
         height = screen.get_height()-((i+1)*PLATFORM_DELTA)+vert_offset
         rect = pygame.Rect(pos,height,width,PLATFORM_HEIGHT)
         color = "blue"
-        detect_collision(rect,player_pos)
+        if detect_collision(rect,player_pos):
+            last_floor_touched = i
         # if detect_collision(rect,player_pos):
         #     color = "green"
         pygame.draw.rect(screen,color,rect)
@@ -111,11 +115,14 @@ while running:
         vertical_velocity = 0
         can_jump = True
         can_dash = True
+        last_floor_touched = -1
     if player_pos.x > screen.get_width()+PLAYER_RADIUS:
         player_pos.x -= screen.get_width()+PLAYER_RADIUS*2
     if player_pos.x < -PLAYER_RADIUS:
         player_pos.x += screen.get_width()+PLAYER_RADIUS*2
 
+
+    screen.blit(font.render("Block "+str(last_floor_touched +1),True,"white","purple"),(0,0))
     pygame.display.flip()
     
 
